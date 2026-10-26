@@ -1,0 +1,16 @@
+node_modules/
+dist/
+output/
+.playwright-cli/
+_chrome_tmp*/
+_work/
+tools/_rig_work/
+tools/_rig_preview/
+tools/**/*.blend1
+tools/**/*.npy
+__pycache__/
+*.py[cod]
+
+# Original high-resolution exports; the optimized runtime models are checked in instead.
+public/models/map.glb
+public/models/aeren.glb

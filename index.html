@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>ETERNALS — Ciudadela del Abismo</title>
+    <meta name="theme-color" content="#11131f" />
+    <link rel="preload" as="image" href="%BASE_URL%ui/world-map-citadel.webp?v=mapa-20261026" type="image/webp" fetchpriority="high" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23cc3154' d='M32 3 54 32 32 61 10 32Z'/%3E%3Cpath fill='%2311131f' d='M32 14 43 32 32 50 21 32Z'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body class="at-title">
+    <div id="game-root">
+      <section id="title-screen" class="title-screen" aria-labelledby="eternals-title">
+        <audio id="title-music" src="%BASE_URL%audio/eternals/ancient-sanctum.mp3" preload="auto" loop></audio>
+        <div class="title-art" role="img" aria-label="Aeren frente a la Ciudadela del Abismo, ilustración anime de ETERNALS"></div>
+        <div class="title-shade"></div>
+        <canvas id="title-particles" class="title-particles" aria-hidden="true"></canvas>
+        <div class="title-content">
+          <div class="title-sigil" aria-hidden="true"><span></span></div>
+          <p class="title-kicker">CIUDADELA DEL ABISMO</p>
+          <h1 id="eternals-title" class="eternals-title">ETERNALS</h1>
+          <div class="title-rule" aria-hidden="true"><i></i></div>
+          <button id="title-play" class="title-play" type="button" disabled><span class="play-triangle" aria-hidden="true"></span>JUGAR</button>
+          <div class="title-progress" aria-hidden="true"><div id="title-load-progress"></div></div>
+          <p id="title-status" class="title-status" role="status">Preparando la Ciudadela…</p>
+        </div>
+        <div class="title-footer"><span>UNA INCURSIÓN EN EL ABISMO</span></div>
+        <button id="title-sound" class="title-sound" type="button" aria-label="Activar o silenciar el sonido de ETERNALS" aria-pressed="false">SONIDO ON</button>
+      </section>
+      <section id="world-map" class="world-map" role="dialog" aria-modal="true" aria-labelledby="world-map-title" hidden>
+        <div class="world-map-art" aria-hidden="true"><img id="world-map-image" class="world-map-image" src="%BASE_URL%ui/world-map-citadel.webp?v=mapa-20261026" alt="" fetchpriority="high" decoding="sync" /></div>
+        <div class="world-map-shade" aria-hidden="true"></div>
+        <canvas id="world-map-particles" class="world-map-particles" aria-hidden="true"></canvas>
+        <header class="world-map-header">
+          <span class="world-map-eyebrow">✦ &nbsp; SELECCIÓN DE MUNDO &nbsp; ✦</span>
+          <h1 id="world-map-title">ETERNALS</h1>
+          <div class="world-map-header-rule"><i></i></div>
+          <p>Ciudadela del Abismo</p>
+        </header>
+        <div class="world-map-compass" aria-hidden="true">
+          <span class="compass-n">N</span><span class="compass-e">E</span><span class="compass-s">S</span><span class="compass-o">O</span>
+          <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="31"/><circle cx="50" cy="50" r="22"/><path d="M50 4 56 44 96 50 56 56 50 96 44 56 4 50 44 44Z"/><path d="M50 4 50 96M4 50H96M27 27 73 73M73 27 27 73"/></svg>
+        </div>
+        <button id="map-sound" class="world-map-sound" type="button" aria-label="Activar o silenciar sonido" aria-pressed="false">SONIDO ON</button>
+        <div class="world-map-markers" aria-label="Lugares de la Ciudadela">
+          <button class="world-map-pin pin-entry selected" type="button" style="--x:50%;--y:79%" data-name="Entrada del Umbral" data-description="El comienzo de tu incursión. Los primeros guardianes esperan en la plaza." data-label="ENTRADA" aria-label="Entrada del Umbral" aria-pressed="true"><span>◆</span></button>
+          <button class="world-map-pin pin-bridge" type="button" style="--x:50%;--y:57%" data-name="Puente Axial" data-description="El camino suspendido que conduce al corazón de la Ciudadela." data-label="PUENTE AXIAL" aria-label="Puente Axial" aria-pressed="false"><span>✦</span></button>
+          <button class="world-map-pin pin-sanctuary" type="button" style="--x:50%;--y:34%" data-name="Santuario del Abismo" data-description="El santuario central y el último de los tres sellos." data-label="SANTUARIO" aria-label="Santuario del Abismo" aria-pressed="false"><span>✧</span></button>
+        </div>
+        <aside class="world-map-legend" aria-label="Leyenda del mapa">
+          <h2><span>✦</span> Leyenda</h2>
+          <div><i class="legend-icon entry">◆</i><span>Entrada</span></div>
+          <div><i class="legend-icon bridge">✦</i><span>Camino y guardianes</span></div>
+          <div><i class="legend-icon sanctuary">✧</i><span>Santuario</span></div>
+        </aside>
+        <div class="world-map-detail" aria-live="polite">
+          <span>✦ &nbsp; LUGAR DESTACADO</span>
+          <h2 id="map-region-name">Entrada del Umbral</h2>
+          <p id="map-region-description">El comienzo de tu incursión. Los primeros guardianes esperan en la plaza.</p>
+        </div>
+        <div class="world-map-actions">
+          <button id="map-back" class="world-map-back" type="button"><span>‹</span> VOLVER</button>
+          <button id="map-start" class="world-map-start" type="button"><span aria-hidden="true">✦</span> INICIAR MUNDO <span aria-hidden="true">›</span></button>
+        </div>
+      </section>
+      <section id="intro-overlay" class="intro-overlay" aria-label="Introducción de ETERNALS" hidden>
+        <video id="intro-video" src="%BASE_URL%video/intro-eternals.mp4" preload="auto" playsinline></video>
+        <button id="intro-skip" class="intro-skip" type="button" aria-label="Omitir introducción">OMITIR <span aria-hidden="true">›</span></button>
+        <div id="intro-fallback" class="intro-fallback" hidden>
+          <p id="intro-message"></p>
+          <button id="intro-continue" type="button">REPRODUCIR INTRODUCCIÓN</button>
+        </div>
+      </section>
+      <canvas id="game-canvas" tabindex="0" aria-label="Ciudadela del Abismo. WASD para moverte; J ataca; K magia; X esquiva; Espacio salta; Esc pausa."></canvas>
+      <div id="damage-vignette" class="damage-vignette" aria-hidden="true"></div>
+
+      <!-- Stylized Persona 5 / Dark Fantasy screen overlays -->
+      <div id="p5-flash" class="p5-flash"></div>
+      <div id="p5-cutin" class="p5-cutin" aria-hidden="true">
+        <div class="p5-cutin-slash">
+          <img src="%BASE_URL%ui/party_aeren.png" alt="Aeren" class="p5-cutin-portrait" />
+          <div class="p5-cutin-text">
+            <span class="p5-cutin-sub">ARTE ABISAL CARMESÍ</span>
+            <span id="p5-cutin-title" class="p5-cutin-main">JUICIO DEL ABISMO</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating damage & status layer -->
+      <div id="floating-layer" class="floating-layer"></div>
+
+      <!-- Lock-on reticle -->
+      <div id="lock-reticle" class="lock-reticle hidden">
+        <div class="reticle-ring"></div>
+        <div class="reticle-diamond"></div>
+      </div>
+
+      <!-- TOP-LEFT: Main Character Status Panel (Aeren portrait + HP/MP bars) -->
+      <div id="hud-status" class="hud-status">
+        <img src="%BASE_URL%ui/hud_hp.png" id="hud-hp-fill" class="hud-layer hud-hp-fill" alt="" />
+        <img src="%BASE_URL%ui/hud_mp.png" id="hud-mp-fill" class="hud-layer hud-mp-fill" alt="" />
+        <img src="%BASE_URL%ui/hud_frame.png" class="hud-layer hud-frame" alt="Aeren Status" />
+        <div class="hud-stats-row">
+          <span class="stat-item">Nv. <strong id="stat-lv">41</strong></span>
+          <span class="stat-sep">|</span>
+          <span class="stat-item stat-ht">HT</span>
+          <span class="stat-sep">|</span>
+          <span class="stat-item">VIT <strong id="stat-hp">3560</strong></span>
+          <span class="stat-sep">|</span>
+          <span class="stat-item">MP <strong id="stat-mp">240</strong></span>
+        </div>
+      </div>
+      <div id="mobile-status" class="mobile-status" aria-label="Estado de Aeren">
+        <img src="%BASE_URL%ui/party_aeren.png" alt="" />
+        <div class="mobile-status-content">
+          <div class="mobile-status-name"><strong>AEREN</strong><span>Nv. 41</span></div>
+          <div class="mobile-status-bar hp"><i id="mobile-hp-fill"></i><span>HP <b id="mobile-hp">3560</b></span></div>
+          <div class="mobile-status-bar mp"><i id="mobile-mp-fill"></i><span>MP <b id="mobile-mp">240</b></span></div>
+        </div>
+      </div>
+
+      <!-- TOP-CENTER: District / Enemy Banner & Teleporter Prompt -->
+      <div id="zone-banner" class="zone-banner">
+        <div class="zone-sub">CIUDADELA DEL ABISMO</div>
+        <div id="zone-name" class="zone-title">UMBRAL DEL SUR</div>
+      </div>
+      <div id="objective" class="objective" aria-label="Objetivo de la incursión">
+        <div class="seal-pips" aria-hidden="true"><i class="seal-pip"></i><i class="seal-pip"></i><i class="seal-pip"></i></div>
+        <span id="objective-label">Rompe los tres sellos</span><strong id="objective-count">0 / 3</strong>
+      </div>
+      <div class="utility-controls">
+        <button id="fullscreen-button" type="button" aria-label="Activar pantalla completa" hidden>⛶</button>
+        <button id="sound-button" type="button" aria-label="Activar o silenciar sonido" aria-pressed="false">SONIDO ON</button>
+        <button id="pause-button" type="button" aria-label="Pausar el juego">PAUSA <span>ESC</span></button>
+      </div>
+      <div id="game-notice" class="game-notice" role="status" aria-live="polite"></div>
+
+      <div id="enemy-hud" class="enemy-hud hidden">
+        <div class="enemy-hud-top">
+          <span id="enemy-rank" class="enemy-rank">CENTINELA ABISAL</span>
+          <span id="enemy-hp-text" class="enemy-hp-text">1200 / 1200</span>
+        </div>
+        <div id="enemy-name" class="enemy-name">CENTINELA DEL ABISMO</div>
+        <div class="enemy-bar-frame">
+          <span class="enemy-bar-cap left" aria-hidden="true"></span>
+          <div class="enemy-bar-track">
+            <div id="enemy-bar-trail" class="enemy-bar-trail"></div>
+            <div id="enemy-bar-fill" class="enemy-bar-fill"></div>
+          </div>
+          <span class="enemy-bar-cap right" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div id="interact-prompt" class="interact-prompt hidden">
+        <span class="key-badge">E</span> <span id="interact-text">Salto Astral a Isla Flotante</span>
+      </div>
+
+      <!-- TOP-RIGHT: Real-Time Circular Minimap -->
+      <div id="hud-minimap" class="hud-minimap">
+        <canvas id="minimap-canvas" width="256" height="256"></canvas>
+        <img src="%BASE_URL%ui/minimap_frame.png" class="minimap-frame" alt="Minimapa" />
+        <div id="minimap-coord" class="minimap-coord">SANTUARIO 0m</div>
+      </div>
+
+      <!-- BOTTOM-LEFT: Kingdom Hearts / Persona 5 Command Menu -->
+      <div id="hud-commands" class="hud-commands" role="menu" aria-label="Comandos de combate">
+        <div class="cmd-header">
+          <img src="%BASE_URL%ui/plate_header.png" alt="" />
+          <span class="cmd-header-label">Comandos</span>
+        </div>
+        <button class="cmd-item selected" data-cmd="attack" data-index="0">
+          <img src="%BASE_URL%ui/plate_selected.png" class="plate-sel" alt="" />
+          <img src="%BASE_URL%ui/plate_normal.png" class="plate-norm" alt="" />
+          <span class="cmd-label">Atacar</span>
+          <span class="cmd-key">Clic Izq / J</span>
+        </button>
+        <button class="cmd-item" data-cmd="magic" data-index="1">
+          <img src="%BASE_URL%ui/plate_selected.png" class="plate-sel" alt="" />
+          <img src="%BASE_URL%ui/plate_normal.png" class="plate-norm" alt="" />
+          <span class="cmd-label">Magia</span>
+          <span class="cmd-key">Clic Der / K</span>
+        </button>
+        <button class="cmd-item" data-cmd="items" data-index="2">
+          <img src="%BASE_URL%ui/plate_selected.png" class="plate-sel" alt="" />
+          <img src="%BASE_URL%ui/plate_normal.png" class="plate-norm" alt="" />
+          <span class="cmd-label">Objetos</span>
+          <span class="cmd-key">1 / H</span>
+        </button>
+        <button class="cmd-item" data-cmd="link" data-index="3">
+          <img src="%BASE_URL%ui/plate_selected.png" class="plate-sel" alt="" />
+          <img src="%BASE_URL%ui/plate_normal.png" class="plate-norm" alt="" />
+          <span class="cmd-label">Vínculo</span>
+          <span class="cmd-key">2 / L</span>
+        </button>
+      </div>
+
+      <!-- RIGHT-SIDE: Party Companion Portrait -->
+      <div id="hud-party" class="hud-party">
+        <div class="party-slot" id="party-lyra" title="Lyra — Vínculo Esmeralda (Tecla 2 / L)">
+          <img src="%BASE_URL%ui/party_lyra.png" alt="Lyra" />
+          <div class="party-ring"></div>
+          <span class="party-name">LYRA</span>
+        </div>
+      </div>
+
+      <!-- BOTTOM-RIGHT: Limit Gauge (Límite) -->
+      <div id="hud-limit" class="hud-limit" title="Pulsa Q o F cuando esté cargado para desatar el Límite">
+        <img src="%BASE_URL%ui/limit_bar.png" id="limit-bar-fill" class="limit-layer limit-bar-fill" alt="" />
+        <img src="%BASE_URL%ui/limit_arc.png" id="limit-arc-fill" class="limit-layer limit-arc-fill" alt="" />
+        <img src="%BASE_URL%ui/limit_frame.png" class="limit-layer limit-frame" alt="Límite" />
+        <div id="limit-ready-badge" class="limit-ready-badge">¡PULSA Q — LÍMITE!</div>
+      </div>
+
+      <!-- Controls Quick Bar & Camera/Teleport Shortcuts -->
+      <div id="controls-bar" class="controls-bar">
+        <span><b>WASD</b> Mover</span>
+        <span><b>Shift</b> Correr</span>
+        <span><b>X / Ctrl</b> Esquivar</span>
+        <span><b>Espacio</b> Saltar</span>
+        <span><b>Clic Izq / J</b> Espada (Combo x3)</span>
+        <span><b>Clic Der / K</b> Magia Roja</span>
+        <span><b>Q</b> Límite</span>
+        <span><b>Tab</b> Fijar Blanco</span>
+        <span><b>V</b> Vistas Mapa</span>
+        <span><b>E</b> Portal</span>
+        <span><b>Arrastrar clic der.</b> Cámara</span>
+      </div>
+
+      <div id="touch-controls" class="touch-controls" aria-label="Controles táctiles">
+        <div id="move-pad" class="move-pad" role="group" aria-label="Palanca de movimiento"><div class="pad-ring"></div><div id="move-stick" class="move-stick"></div></div>
+        <button id="touch-sprint" class="touch-sprint" type="button" aria-label="Activar o desactivar carrera" aria-pressed="false">CORRER</button>
+        <div class="touch-actions">
+          <button data-touch-cmd="lock" class="touch-small" aria-label="Fijar blanco"><span aria-hidden="true">⌖</span><small>FIJAR</small></button>
+          <button data-touch-cmd="interact" class="touch-small" aria-label="Usar portal"><span aria-hidden="true">◇</span><small>PORTAL</small></button>
+          <button data-touch-cmd="link" class="touch-small" aria-label="Usar vínculo"><span aria-hidden="true">✧</span><small>VÍNCULO</small></button>
+          <button data-touch-cmd="items" class="touch-small" aria-label="Usar objeto de curación"><span aria-hidden="true">✚</span><small>CURAR</small></button>
+          <button data-touch-cmd="limit" class="touch-small touch-limit" aria-label="Usar límite"><span aria-hidden="true">✦</span><small>LÍMITE</small></button>
+          <button data-touch-cmd="magic" aria-label="Lanzar magia"><span aria-hidden="true">✺</span><small>MAGIA</small></button>
+          <button data-touch-cmd="jump" aria-label="Saltar"><span aria-hidden="true">⌃</span><small>SALTO</small></button>
+          <button data-touch-cmd="dodge" aria-label="Esquivar"><span aria-hidden="true">»</span><small>ESQUIVA</small></button>
+          <button data-touch-cmd="attack" class="touch-attack" aria-label="Atacar"><span aria-hidden="true">⚔</span><small>ESPADA</small></button>
+        </div>
+      </div>
+
+      <div id="rotate-hint" class="rotate-hint" role="status">
+        <div class="rotate-icon" aria-hidden="true">▱ <span>↻</span></div>
+        <strong>GIRA TU MÓVIL</strong>
+        <p>ETERNALS se juega en horizontal.</p>
+      </div>
+
+      <section id="game-menu" class="game-menu" aria-labelledby="menu-title" hidden>
+        <div class="menu-panel">
+          <div class="menu-mark" aria-hidden="true"><span></span></div>
+          <p id="menu-eyebrow" class="menu-eyebrow">LA CIUDADELA TE ESPERA</p>
+          <h1 id="menu-title">Rompe los tres sellos</h1>
+          <p id="menu-description" class="menu-description">Recorre sus puentes y derrota a los guardianes.</p>
+          <div class="menu-actions">
+            <button id="menu-primary" class="menu-primary" type="button">Entrar en la Ciudadela</button>
+            <button id="menu-restart" class="menu-secondary" type="button">Reiniciar incursión</button>
+          </div>
+          <div class="menu-settings">
+            <label>Calidad<select id="quality-select"><option value="performance">Fluida</option><option value="balanced">Equilibrada</option><option value="high">Alta</option></select></label>
+            <label>Volumen<input id="menu-volume" type="range" min="0" max="1" step="0.05" value="0.55" /></label>
+            <label class="motion-setting"><input id="motion-check" type="checkbox" /> Reducir sacudidas</label>
+          </div>
+          <p class="menu-controls"><span>WASD · moverte</span><span>J · espada</span><span>K · magia</span><span>X · esquiva</span><span>Espacio · salto</span><span>Arrastra clic derecho · cámara</span><span>Tab · fijar blanco</span><span>E · portal</span></p>
+          <p class="touch-menu-hint">Palanca para moverte · cámara fija · botones para combatir</p>
+        </div>
+      </section>
+
+      <!-- Loading Screen -->
+      <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-card">
+          <div class="loading-rune"></div>
+          <h1>CIUDADELA DEL ABISMO</h1>
+          <p id="loading-status">Despertando el núcleo violeta del inframundo…</p>
+          <div class="loading-bar">
+            <div id="loading-progress" class="loading-progress"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

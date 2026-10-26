@@ -1,0 +1,151 @@
+{
+  "bones": {
+    "root": "Root",
+    "hips": "Hips",
+    "spine": "Spine",
+    "spine1": "Spine1",
+    "chest": "Chest",
+    "neck": "Neck",
+    "head": "Head",
+    "hand_R": "Hand_R",
+    "hand_L": "Hand_L",
+    "foot_L": "Foot_L",
+    "foot_R": "Foot_R"
+  },
+  "fx_nodes": {
+    "SwordBase": "SwordBase",
+    "SwordMid": "SwordMid",
+    "SwordTip": "SwordTip",
+    "HandL_FX": "HandL_FX",
+    "HandR_FX": "HandR_FX"
+  },
+  "clips": {
+    "Idle": {
+      "duration": 3.0,
+      "frames": 90,
+      "loop": true,
+      "events": {}
+    },
+    "Walk": {
+      "duration": 1.0,
+      "frames": 30,
+      "loop": true,
+      "events": {
+        "step": [
+          0.25,
+          0.75
+        ]
+      }
+    },
+    "Run": {
+      "duration": 0.6667,
+      "frames": 20,
+      "loop": true,
+      "events": {
+        "step": [
+          0.22,
+          0.72
+        ]
+      }
+    },
+    "Jump": {
+      "duration": 0.5333,
+      "frames": 16,
+      "loop": false,
+      "events": {}
+    },
+    "Fall": {
+      "duration": 0.8,
+      "frames": 24,
+      "loop": true,
+      "events": {}
+    },
+    "Land": {
+      "duration": 0.4,
+      "frames": 12,
+      "loop": false,
+      "events": {
+        "land": [
+          0.1
+        ]
+      }
+    },
+    "Dodge": {
+      "duration": 0.6,
+      "frames": 18,
+      "loop": false,
+      "events": {
+        "whoosh": [
+          0.12
+        ]
+      }
+    },
+    "Attack1": {
+      "duration": 0.6,
+      "frames": 18,
+      "loop": false,
+      "events": {
+        "hit": [
+          0.26
+        ],
+        "slash_window": [
+          0.16,
+          0.42
+        ]
+      }
+    },
+    "Attack2": {
+      "duration": 0.6,
+      "frames": 18,
+      "loop": false,
+      "events": {
+        "hit": [
+          0.26
+        ],
+        "slash_window": [
+          0.15,
+          0.42
+        ]
+      }
+    },
+    "Attack3": {
+      "duration": 0.8667,
+      "frames": 26,
+      "loop": false,
+      "events": {
+        "hit": [
+          0.5
+        ],
+        "slash_window": [
+          0.36,
+          0.66
+        ]
+      }
+    },
+    "Cast": {
+      "duration": 1.0667,
+      "frames": 32,
+      "loop": false,
+      "events": {
+        "charge": [
+          0.1
+        ],
+        "release": [
+          0.52
+        ]
+      }
+    },
+    "Hit": {
+      "duration": 0.5,
+      "frames": 15,
+      "loop": false,
+      "events": {}
+    },
+    "Death": {
+      "duration": 1.5,
+      "frames": 45,
+      "loop": false,
+      "events": {}
+    }
+  }
+}
