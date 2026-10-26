@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>ETERNALS — Ciudadela del Abismo</title>
     <meta name="theme-color" content="#11131f" />
-    <link rel="preload" as="image" href="%BASE_URL%ui/world-map-citadel.webp?v=mapa-20261026" type="image/webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="%BASE_URL%ui/world-map-citadel.webp?v=mobile-map-fix-20261026" type="image/webp" fetchpriority="high" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23cc3154' d='M32 3 54 32 32 61 10 32Z'/%3E%3Cpath fill='%2311131f' d='M32 14 43 32 32 50 21 32Z'/%3E%3C/svg%3E" />
     <link rel="stylesheet" href="/src/style.css" />
   </head>
@@ -29,7 +29,7 @@
         <button id="title-sound" class="title-sound" type="button" aria-label="Activar o silenciar el sonido de ETERNALS" aria-pressed="true">SONIDO ON</button>
       </section>
       <section id="world-map" class="world-map" role="dialog" aria-modal="true" aria-labelledby="world-map-title" hidden>
-        <div class="world-map-art" aria-hidden="true"><img id="world-map-image" class="world-map-image" src="%BASE_URL%ui/world-map-citadel.webp?v=mapa-20261026" alt="" fetchpriority="high" decoding="sync" /></div>
+        <div class="world-map-art" aria-hidden="true"><img id="world-map-image" class="world-map-image" src="%BASE_URL%ui/world-map-citadel.webp?v=mobile-map-fix-20261026" alt="" fetchpriority="high" decoding="sync" /></div>
         <div class="world-map-shade" aria-hidden="true"></div>
         <canvas id="world-map-particles" class="world-map-particles" aria-hidden="true"></canvas>
         <header class="world-map-header">
@@ -247,6 +247,7 @@
         <div class="rotate-icon" aria-hidden="true">▱ <span>↻</span></div>
         <strong>GIRA TU MÓVIL</strong>
         <p>ETERNALS se juega en horizontal.</p>
+        <button id="rotate-start" class="rotate-start" type="button">PANTALLA COMPLETA</button>
       </div>
 
       <section id="game-menu" class="game-menu" aria-labelledby="menu-title" hidden>

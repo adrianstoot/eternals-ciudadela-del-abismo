@@ -1205,6 +1205,8 @@ button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px s
   .rotate-hint p { max-width:260px; font:600 17px/1.4 var(--font-serif); color:#cdbdda; }
   .rotate-icon { font-size:64px; color:#d3b6ef; line-height:1; text-shadow:0 0 20px #b34eff; }
   .rotate-icon span { font-size:40px; display:inline-block; animation:rotate-hint-motion 2s ease-in-out infinite; }
+  .rotate-start { margin-top:10px; min-height:48px; padding:0 22px; border:1px solid #e3c4ff; border-radius:2px; color:#fff5ff; background:linear-gradient(110deg,#70419a,#321e4c); box-shadow:0 0 24px #b34eff66,inset 0 1px #fff5; font:600 11px var(--font-display); letter-spacing:.16em; }
+  .rotate-start:focus-visible { outline:2px solid #fff; outline-offset:4px; }
   @keyframes rotate-hint-motion { 50% { transform:rotate(35deg); } }
 }
 @media (pointer: coarse) and (orientation: landscape) and (max-height: 700px) {
@@ -1226,7 +1228,7 @@ button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px s
   .title-sound { right:max(10px,env(safe-area-inset-right)); bottom:max(7px,env(safe-area-inset-bottom)); min-height:44px; font-size:8px; padding:8px 12px; }
 
   /* World map: reserve the centre for the actual artwork and pins. */
-  .world-map-art { inset:0; background-image:url('/ui/world-map-citadel.webp'),linear-gradient(#10091eb8,#10091eb8),url('/ui/world-map-citadel.webp'); background-size:contain,cover,cover; background-position:center; background-repeat:no-repeat; background-color:#10091e; animation:mobile-map-glow 8s ease-in-out infinite alternate; }
+  .world-map-art { inset:0; background-image:none; background-color:#10091e; animation:mobile-map-glow 8s ease-in-out infinite alternate; }
   @keyframes mobile-map-glow { from { filter:brightness(.94); } to { filter:brightness(1.05); } }
   .world-map-header { left:max(12px,env(safe-area-inset-left)); top:max(8px,env(safe-area-inset-top)); width:min(36vw,265px); text-align:center; }
   .world-map-header h1 { font-size:clamp(30px,5.4vw,49px); margin-top:2px; }

@@ -159,6 +159,7 @@ export class AbyssCitadelGame {
 
   _openWorldMap() {
     if (!this.ready || this.phase !== 'ready') return;
+    if (this.isTouchDevice) this._requestMobileLandscape();
     this.phase = 'world-map';
     this._playTitleMusic(true);
     this.audio.prepare();
@@ -186,6 +187,7 @@ export class AbyssCitadelGame {
 
   _beginIntro() {
     if (!this.ready || this.phase !== 'world-map') return;
+    if (this.isTouchDevice) this._requestMobileLandscape();
     this.phase = 'intro';
     this.worldMapParticles?.stop();
     $('world-map').hidden = true;
@@ -474,6 +476,7 @@ export class AbyssCitadelGame {
 
   _bindInterface() {
     $('title-play').addEventListener('click', () => this._openWorldMap());
+    $('rotate-start').addEventListener('click', () => this._requestMobileLandscape());
     $('title-sound').addEventListener('click', () => {
       if (this.titleMusicBlocked && !this.audio.muted) this._playTitleMusic(true);
       else this._toggleMute();
@@ -561,6 +564,17 @@ export class AbyssCitadelGame {
     };
     $('touch-sprint').addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); toggleSprint(); });
     $('touch-sprint').addEventListener('click', e => { if (e.detail === 0) toggleSprint(); });
+  }
+
+  async _requestMobileLandscape() {
+    if (!this.isTouchDevice) return;
+    try {
+      const root = $('game-root');
+      if (!document.fullscreenElement && document.fullscreenEnabled) await root.requestFullscreen();
+      if (screen.orientation?.lock) await screen.orientation.lock('landscape');
+    } catch { /* Some mobile browsers only allow rotation by physically turning the device. */ }
+    this._resize();
+    this._syncMobileOrientation();
   }
 
   _bindTouch() {
