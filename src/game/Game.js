@@ -37,6 +37,7 @@ export class AbyssCitadelGame {
     this.titleMusic.volume = .45;
     this.titleMusicBlocked = false;
     this.titleMusicPending = false;
+    this.titleMusicRequest = 0;
     this.titleParticles = new TitleParticles($('title-particles'), $('title-screen'));
     this.fx = new FXManager(this.scene);
     this.mapScene = new MapScene(this.scene, this.renderer);
@@ -57,6 +58,7 @@ export class AbyssCitadelGame {
     this.introFadeStarted = false;
     this.introCutoffTimer = 0;
     this.introFadeFrame = 0;
+    this.introRevealPending = false;
     this.ready = false;
     this.elapsed = 0;
     this.frame = 0;
@@ -106,6 +108,11 @@ export class AbyssCitadelGame {
       this.cameraCtrl.reset?.(this.player);
       this.mapScene.update(0, 0, this.player.position);
       this.player.root.updateMatrixWorld(true);
+      $('loading-status').textContent = 'Preparando la primera imagen de la Ciudadela…';
+      $('title-status').textContent = 'Preparando la escena…';
+      this.mapScene.atmosphere?.update(this.player.position, this.camera, this.reducedMotion);
+      this.renderer.info.reset();
+      this.composer.render(STEP);
       this.ready = true;
       $('loading-progress').style.width = '100%';
       $('loading-status').textContent = 'La Ciudadela te espera';
@@ -126,10 +133,12 @@ export class AbyssCitadelGame {
     }
   }
 
-  _playTitleMusic() {
-    if (!['loading', 'ready', 'world-map'].includes(this.phase) || this.audio.muted || this.titleMusicPending) return;
+  _playTitleMusic(force = false) {
+    if (!['loading', 'ready', 'world-map'].includes(this.phase) || this.audio.muted || (this.titleMusicPending && !force)) return;
+    const request = ++this.titleMusicRequest;
     this.titleMusicPending = true;
     this.titleMusic.play().then(() => {
+      if (request !== this.titleMusicRequest) return;
       this.titleMusicPending = false;
       if (!['loading', 'ready', 'world-map'].includes(this.phase) || this.audio.muted) { this.titleMusic.pause(); return; }
       this.titleMusicBlocked = false;
@@ -138,6 +147,7 @@ export class AbyssCitadelGame {
       $('map-sound').textContent = 'SONIDO ON';
       $('map-sound').setAttribute('aria-label', 'Activar o silenciar sonido');
     }).catch(error => {
+      if (request !== this.titleMusicRequest) return;
       this.titleMusicPending = false;
       if (!['loading', 'ready', 'world-map'].includes(this.phase) || this.audio.muted) return;
       this.titleMusicBlocked = true;
@@ -150,7 +160,7 @@ export class AbyssCitadelGame {
   _openWorldMap() {
     if (!this.ready || this.phase !== 'ready') return;
     this.phase = 'world-map';
-    if (this.titleMusic.paused) this._playTitleMusic();
+    this._playTitleMusic(true);
     this.audio.prepare();
     $('title-screen').classList.add('departing');
     $('title-screen').setAttribute('aria-hidden', 'true');
@@ -224,7 +234,6 @@ export class AbyssCitadelGame {
     clearInterval(this.introCutoffTimer);
     $('intro-skip').disabled = true;
     const video = $('intro-video');
-    video.pause();
     $('intro-fallback').hidden = true;
     $('intro-overlay').classList.add('is-fading');
     const startVolume = video.muted ? 0 : video.volume;
@@ -238,10 +247,9 @@ export class AbyssCitadelGame {
         return;
       }
       video.volume = 0;
+      video.pause();
       video.currentTime = 0;
-      $('intro-overlay').hidden = true;
-      $('intro-overlay').classList.remove('is-fading');
-      this.introFadeStarted = false;
+      this.introRevealPending = true;
       this.start();
     };
     this.introFadeFrame = requestAnimationFrame(fade);
@@ -250,6 +258,8 @@ export class AbyssCitadelGame {
   start() {
     if (!this.ready) return;
     this.phase = 'playing';
+    $('game-root').scrollTop = 0;
+    $('game-root').scrollLeft = 0;
     $('title-screen').classList.add('departing');
     $('title-screen').setAttribute('aria-hidden', 'true');
     $('title-screen').inert = true;
@@ -465,12 +475,15 @@ export class AbyssCitadelGame {
   _bindInterface() {
     $('title-play').addEventListener('click', () => this._openWorldMap());
     $('title-sound').addEventListener('click', () => {
-      if (this.titleMusicBlocked && !this.audio.muted) this._playTitleMusic();
+      if (this.titleMusicBlocked && !this.audio.muted) this._playTitleMusic(true);
       else this._toggleMute();
     });
     $('map-start').addEventListener('click', () => this._beginIntro());
     $('map-back').addEventListener('click', () => this._backToTitle());
-    $('map-sound').addEventListener('click', () => this._toggleMute());
+    $('map-sound').addEventListener('click', () => {
+      if (this.titleMusicBlocked && !this.audio.muted) this._playTitleMusic(true);
+      else this._toggleMute();
+    });
     const fullscreen = $('fullscreen-button');
     fullscreen.hidden = !this.isTouchDevice || !document.fullscreenEnabled;
     fullscreen.addEventListener('click', async () => {
@@ -605,11 +618,11 @@ export class AbyssCitadelGame {
     if (muted) this.titleMusic.pause();
     else if (['loading', 'ready', 'world-map'].includes(this.phase)) this._playTitleMusic();
     $('sound-button').textContent = muted ? 'SONIDO OFF' : 'SONIDO ON';
-    $('sound-button').setAttribute('aria-pressed', String(muted));
+    $('sound-button').setAttribute('aria-pressed', String(!muted));
     $('title-sound').textContent = muted ? 'SONIDO OFF' : 'SONIDO ON';
-    $('title-sound').setAttribute('aria-pressed', String(muted));
+    $('title-sound').setAttribute('aria-pressed', String(!muted));
     $('map-sound').textContent = muted ? 'SONIDO OFF' : 'SONIDO ON';
-    $('map-sound').setAttribute('aria-pressed', String(muted));
+    $('map-sound').setAttribute('aria-pressed', String(!muted));
   }
 
   _setQuality(quality) {
@@ -733,6 +746,12 @@ export class AbyssCitadelGame {
     if (this.fx.sparkPoints?.material.uniforms.uIsoScale) this.fx.sparkPoints.material.uniforms.uIsoScale.value = this.canvas.clientHeight / (this.camera.top - this.camera.bottom);
     this.renderer.info.reset();
     this.composer.render(wallDt);
+    if (this.introRevealPending) {
+      this.introRevealPending = false;
+      $('intro-overlay').hidden = true;
+      $('intro-overlay').classList.remove('is-fading');
+      this.introFadeStarted = false;
+    }
     this._publishDiagnostics();
   }
 

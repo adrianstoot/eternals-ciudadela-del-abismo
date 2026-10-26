@@ -349,6 +349,59 @@ body {
   pointer-events: none;
 }
 
+/* Companion portrait stays in its own HUD lane, clear of Aeren's status. */
+.hud-party {
+  position: absolute;
+  z-index: 22;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.party-slot {
+  position: relative;
+  flex: none;
+  border-radius: 50%;
+  cursor: pointer;
+  pointer-events: auto;
+  filter: drop-shadow(0 4px 8px #000b);
+  transition: transform .2s ease, filter .2s ease;
+}
+
+.party-slot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.party-ring {
+  position: absolute;
+  inset: -2px;
+  border: 1px solid #d6aeff7d;
+  border-radius: 50%;
+  box-shadow: 0 0 12px #a44bdf5c;
+  pointer-events: none;
+}
+
+.party-name {
+  position: absolute;
+  top: calc(100% + 3px);
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ead6ff;
+  font: 700 8px var(--font-display);
+  letter-spacing: .12em;
+  text-shadow: 0 1px 4px #000, 0 0 8px #a854d2;
+  white-space: nowrap;
+}
+
+.party-slot.active-link {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 12px #a4ffd4);
+}
+
 /* ---------------- BOTTOM-RIGHT: LIMIT GAUGE ---------------- */
 .hud-limit {
   position: absolute;
@@ -972,7 +1025,7 @@ body {
 }
 
 /* Quiet, compact framing keeps the playable scene in the foreground. */
-#game-root { height: 100dvh; }
+#game-root { height: 100dvh; overflow: clip; }
 #game-canvas { outline: none; touch-action: none; }
 .hud-status { width: min(365px, 31vw); top: max(12px, env(safe-area-inset-top)); left: max(16px, env(safe-area-inset-left)); filter: drop-shadow(0 4px 12px #000b); }
 .hud-stats-row { font-size: clamp(11px, 1.05vw, 15px); }
